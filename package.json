@@ -1,0 +1,17 @@
+{
+    "name": "fuyuko",
+    "description": "Extract CMake dependencies via FetchContent calls.",
+    "version": "0.0.1",
+    "type": "module",
+    "scripts": {
+        "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --runInBand"
+    },
+    "author": {
+        "name": "Aaron Lun",
+        "email": "infinite.monkeys.with.keyboards@gmail.com"
+    },
+    "devDependencies": {
+        "isomorphic-fetch": "^3.0.0",
+        "jest": "^28.1.3"
+    }
+}
