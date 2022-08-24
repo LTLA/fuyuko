@@ -1,0 +1,11 @@
+Package: fuyuko
+Title: Find FetchContent Dependencies in CMake Projects
+Description: 
+    Sometimes you don't know whether you have conflicting FetchContent calls in
+    your dependency tree. This refers to FetchContent calls to the same
+    repository but different commits. We provide functions to find these
+    conflicts for further inspection. 
+Version: 0.98.0
+Date: 2022-08-23
+Authors@R: person("Aaron", "Lun", role=c("aut", "cre"), email="infinite.monkeys.with.keyboards@gmail.com")
+RoxygenNote: 7.2.1
