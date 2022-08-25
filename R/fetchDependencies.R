@@ -1,5 +1,6 @@
 #' @export
 #' @importFrom utils URLencode
+#' @importFrom git2r clone checkout
 fetchDependencies <- function(dependencies, cache) {
     dir.create(cache, showWarnings=FALSE)
     all.paths <- rep(NA_character_, nrow(dependencies))
@@ -17,8 +18,8 @@ fetchDependencies <- function(dependencies, cache) {
         tpath <- file.path(rpath, URLencode(tag, reserved=TRUE))
         if (!file.exists(tpath)) {
             tryCatch({
-                system2("git", c("clone", repo, tpath))
-                system(paste("cd", tpath, "&& git checkout", tag))
+                clone(repo, tpath)
+                checkout(tpath, tag)
             }, error=function(e) {
                 unlink(tpath, recursive=TRUE)
                 stop(e)

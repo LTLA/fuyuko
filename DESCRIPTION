@@ -8,4 +8,7 @@ Description:
 Version: 0.98.0
 Date: 2022-08-23
 Authors@R: person("Aaron", "Lun", role=c("aut", "cre"), email="infinite.monkeys.with.keyboards@gmail.com")
+Imports: 
+    utils,
+    git2r
 RoxygenNote: 7.2.1
