@@ -16,8 +16,13 @@ fetchDependencies <- function(dependencies, cache) {
         tag <- dependencies$git.tag[i]
         tpath <- file.path(rpath, URLencode(tag, reserved=TRUE))
         if (!file.exists(tpath)) {
-            system2("git", c("clone", repo, tpath))
-            system(paste("cd", tpath, "&& git checkout", tag))
+            tryCatch({
+                system2("git", c("clone", repo, tpath))
+                system(paste("cd", tpath, "&& git checkout", tag))
+            }, error=function(e) {
+                unlink(tpath, recursive=TRUE)
+                stop(e)
+            })
         }
 
         all.paths[i] <- tpath
@@ -33,7 +38,13 @@ fetchDependencies <- function(dependencies, cache) {
         dir.create(upath, showWarnings=FALSE)
 
         hash <- dependencies$url.hash[i]
-        hpath <- file.path(upath, URLencode(hash, reserved=TRUE))
+        if (!is.na(hash)) {
+            stopifnot(hash != "_missing")
+            hpath <- file.path(upath, URLencode(hash, reserved=TRUE))
+        } else {
+            hpath <- file.path(upath, "_missing")
+        }
+
         if (!file.exists(hpath)) {
             tmp <- paste0(hpath, "-download")
             if (!file.exists(tmp)) {
@@ -44,7 +55,15 @@ fetchDependencies <- function(dependencies, cache) {
                 # Extraction puts it one layer deeper than it should be,
                 # but whatever, we'll be searching it recursively anyway.
                 tryCatch(
-                    untar(tmp, exdir=upath), 
+                    untar(tmp, exdir=hpath), 
+                    error=function(e) {
+                        unlink(hpath, recursive=TRUE)
+                        stop(e)
+                    }
+                )
+            } else if (grepl("\\.zip$", url)) {
+                tryCatch(
+                    unzip(tmp, exdir=hpath), 
                     error=function(e) {
                         unlink(hpath, recursive=TRUE)
                         stop(e)

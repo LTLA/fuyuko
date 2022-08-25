@@ -51,11 +51,16 @@ scanFetchContentDeclare <- function(path) {
         if (length(is.git <- which(args == "GIT_REPOSITORY"))) {
             current.git.repo <- args[is.git + 1L]
             is.tag <- which(args == "GIT_TAG")
+            if (length(is.tag) != 1L) {
+                stop("failed to find GIT_TAG for the FetchContent call on line ", x)
+            }
             current.git.tag <- args[is.tag + 1L]
         } else if (length(is.url <- which(args == "URL"))) {
             current.url <- args[is.url + 1L]
             is.hash <- which(args == "URL_HASH")
-            current.url.hash <- args[is.hash + 1L]
+            if (length(is.hash) == 1L) {
+                current.url.hash <- args[is.hash + 1L]
+            }
         }
 
         collected.names <- c(collected.names, current.name)
