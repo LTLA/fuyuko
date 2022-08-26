@@ -12,7 +12,10 @@ summarizeConflicts <- function(full) {
             by.id <- split(full[current,c("_path", "_parent")], ids)
 
             if (length(by.id) > 1) {
-                failures[[x]] <- by.id
+                failures[[x]] <- lapply(by.id, function(y) {
+                    rownames(y) <- NULL
+                    y
+                })
             }
         }
         output[[prop]] <- failures
@@ -27,6 +30,7 @@ summarizeDependencies <- function(full) {
     col.details <- colnames(full)
     col.details <- col.details[!grepl("^_", col.details)]
     unique.overview <- full[match(unique.ids, full$`_id`),col.details]
+    rownames(unique.overview) <- NULL
 
     # Creating paths to the root for each entry.
     origins <- list()
@@ -41,6 +45,7 @@ summarizeDependencies <- function(full) {
             current.nodes <- current.nodes[!(current.nodes %in% flock$`_id`)]
         }
 
+        rownames(flock) <- NULL
         origins[[u]] <- flock
     }
     

@@ -46,6 +46,7 @@ queryAllDependencies <- function(dir, cache) {
             `_parent` = character(0)
         )
     } else {
-        do.call(rbind, collected)
+        final <-do.call(rbind, collected)
+        unique_data.frame(final)
     }
 }
