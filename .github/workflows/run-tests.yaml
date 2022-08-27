@@ -1,0 +1,41 @@
+on: [push, pull_request]
+
+name: Run tests 
+
+jobs:
+  build:
+    name: Run R CMD check
+    runs-on: ubuntu-latest
+    container: rocker/rstudio:latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set directories
+      run: |
+        echo "R_PKG_DIR=${R_HOME}/site-library" >> $GITHUB_ENV
+        echo "FUYUKO_CACHE_DIR=${HOME}/fuyuko-cache" >> $GITHUB_ENV
+
+    - name: Restore the site library
+      uses: actions/cache@v3
+      with:
+        path: ${{ env.R_PKG_DIR }}
+        key: package-deps
+
+    - name: Restore the fuyuko cache
+      uses: actions/cache@v3
+      with:
+        path: ${{ env.FUYUKO_CACHE_DIR }}
+        key: dependency-cache
+
+    - name: Install system dependencies
+      run: sudo apt-get update && sudo apt-get install -y libgit2-dev
+
+    - name: Install dependencies
+      shell: Rscript {0}
+      run: install.packages(c("git2r", "testthat"))
+
+    - name: Run the tests
+      run: |
+        R CMD build . 
+        tarball=$(ls | grep "tar.gz")
+        R CMD check --no-manual Rscript ${tarball}
