@@ -11,8 +11,16 @@
 #' @author Aaron Lun
 #'
 #' @examples
-#' example(fetchDependencies, echo=FALSE) 
-#' findCMakeLists(paths[1])
+#' df <- data.frame(
+#'     name = "scran", 
+#'     git.repository = "https://github.com/LTLA/libscran",
+#'     git.tag = "ae74e0345303a2d2c6e70d599d72c0e02d346fb6",
+#'     url = NA_character_,
+#'     url.hash = NA_character_
+#' )
+#'
+#' path <- fetchDependencies(df)
+#' findCMakeLists(path)
 #' 
 #' @export
 findCMakeLists <- function(dir, exclude="build") {
