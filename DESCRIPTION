@@ -6,6 +6,7 @@ Description:
     Such differences may cause incompatibilities that need to be resolved before the project builds successfuly.
 Version: 0.98.0
 Date: 2022-08-23
+License: MIT + file LICENSE
 Authors@R: person("Aaron", "Lun", role=c("aut", "cre"), email="infinite.monkeys.with.keyboards@gmail.com")
 Imports: 
     utils,
