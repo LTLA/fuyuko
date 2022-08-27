@@ -30,10 +30,10 @@
 #'     )
 #' )
 #' 
-#' (paths <- fetchDependencies(df, cache = dir))
+#' (paths <- fetchDependencies(df))
 #' 
 #' @export
-#' @importFrom utils URLencode
+#' @importFrom utils URLencode download.file untar unzip
 #' @importFrom git2r clone checkout
 fetchDependencies <- function(dependencies, cache = cacheDirectory()) {
     dir.create(cache, showWarnings=FALSE)

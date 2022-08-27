@@ -39,7 +39,7 @@ df <- rbind(
     )
 )
 
-(paths <- fetchDependencies(df, cache = dir))
+(paths <- fetchDependencies(df))
 
 }
 \author{
