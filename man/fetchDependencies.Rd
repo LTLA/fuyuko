@@ -4,7 +4,7 @@
 \alias{fetchDependencies}
 \title{Download dependencies to disk}
 \usage{
-fetchDependencies(dependencies, cache)
+fetchDependencies(dependencies, cache = cacheDirectory())
 }
 \arguments{
 \item{dependencies}{Data frame containing a manifest of dependencies,
@@ -20,6 +20,27 @@ Each entry contains the path to the directory (stored inside \code{cache}) for t
 \description{
 Fetch CMake project dependencies by cloning Git repositories or downloading their contents.
 These are unpacked into a cache directory for re-use across multiple requests.
+}
+\examples{
+df <- rbind(
+    data.frame(
+        name = "kmeans", 
+        git.repository = "https://github.com/LTLA/CppKmeans",
+        git.tag = "698cd1279530675e8ea10bf58d3a1d1508fa1fb8",
+        url = NA_character_,
+        url.hash = NA_character_
+    ),
+    data.frame(
+        name = "igraph",
+        git.repository = NA_character_,
+        git.tag = NA_character_,
+        url = "https://github.com/igraph/igraph/releases/download/0.9.4/igraph-0.9.4.tar.gz",
+        url.hash = "MD5=ea8d7791579cfbc590060570e0597f6b"
+    )
+)
+
+(paths <- fetchDependencies(df, cache = dir))
+
 }
 \author{
 Aaron Lun

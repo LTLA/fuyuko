@@ -13,7 +13,6 @@
 #' 
 #' @author Aaron Lun
 #' @examples
-#' dir <- file.path(tempdir(), "fuyuko-cache")
 #' df <- rbind(
 #'     data.frame(
 #'         name = "kmeans", 
@@ -31,12 +30,12 @@
 #'     )
 #' )
 #' 
-#' fetchDependencies(df, cache = dir)
+#' (paths <- fetchDependencies(df, cache = dir))
 #' 
 #' @export
 #' @importFrom utils URLencode
 #' @importFrom git2r clone checkout
-fetchDependencies <- function(dependencies, cache) {
+fetchDependencies <- function(dependencies, cache = cacheDirectory()) {
     dir.create(cache, showWarnings=FALSE)
     all.paths <- rep(NA_character_, nrow(dependencies))
 
