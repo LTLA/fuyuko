@@ -11,4 +11,8 @@ Authors@R: person("Aaron", "Lun", role=c("aut", "cre"), email="infinite.monkeys.
 Imports: 
     utils,
     git2r
+Suggests:
+    testthat,
+    knitr,
+    rmarkdown
 RoxygenNote: 7.2.1

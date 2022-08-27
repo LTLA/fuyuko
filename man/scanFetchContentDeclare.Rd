@@ -4,7 +4,7 @@
 \alias{scanFetchContentDeclare}
 \title{Scan a CMakeLists.txt for FetchContent calls}
 \usage{
-scanFetchContentDeclare(path, lines = readLines(path))
+scanFetchContentDeclare(path, lines = readLines(path, warn = FALSE))
 }
 \arguments{
 \item{path}{String containing a path to a CMakeLists.txt.

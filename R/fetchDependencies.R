@@ -56,7 +56,7 @@ fetchDependencies <- function(dependencies, cache = cacheDirectory()) {
                 checkout(tpath, tag)
             }, error=function(e) {
                 unlink(tpath, recursive=TRUE)
-                stop(e)
+                stop("failed to clone Git repository from '", repo, "' (", tag, ")\n  - ", e$message)
             })
         }
 
@@ -83,7 +83,13 @@ fetchDependencies <- function(dependencies, cache = cacheDirectory()) {
         if (!file.exists(hpath)) {
             tmp <- paste0(hpath, "-download")
             if (!file.exists(tmp)) {
-                download.file(url, tmp)
+                tryCatch(
+                    download.file(url, tmp),
+                    error=function(e) {
+                        unlink(tmp)
+                        stop("failed to download '", url, "'\n  - ", e$message)
+                    }
+                )
             }
 
             if (grepl("\\.tar\\.gz$", url)) {
@@ -93,7 +99,7 @@ fetchDependencies <- function(dependencies, cache = cacheDirectory()) {
                     untar(tmp, exdir=hpath), 
                     error=function(e) {
                         unlink(hpath, recursive=TRUE)
-                        stop(e)
+                        stop("failed to unpack tarball from '", url, "'\n  - ", e$message)
                     }
                 )
             } else if (grepl("\\.zip$", url)) {
@@ -101,7 +107,7 @@ fetchDependencies <- function(dependencies, cache = cacheDirectory()) {
                     unzip(tmp, exdir=hpath), 
                     error=function(e) {
                         unlink(hpath, recursive=TRUE)
-                        stop(e)
+                        stop("failed to unpack zipfile from '", url, "'\n  - ", e$message)
                     }
                 )
             } else {

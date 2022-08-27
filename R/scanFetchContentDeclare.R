@@ -41,7 +41,7 @@
 #' scanFetchContentDeclare(lines=strsplit(cmake.file, "\n")[[1]])
 #'
 #' @export
-scanFetchContentDeclare <- function(path, lines = readLines(path)) {
+scanFetchContentDeclare <- function(path, lines = readLines(path, warn=FALSE)) {
     collected.names <- character(0)
     collected.git.repo <- character(0)
     collected.git.tag <- character(0)
