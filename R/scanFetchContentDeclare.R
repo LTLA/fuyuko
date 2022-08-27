@@ -1,7 +1,47 @@
+#' Scan a CMakeLists.txt for FetchContent calls
+#'
+#' Scan a CMakeLists.txt file (or the lines thereof) for \code{FetchContent_Declare} calls,
+#' and extract all identified dependencies.
+#' 
+#' @param path String containing a path to a CMakeLists.txt.
+#' Ignored if \code{lines} is supplied.
+#' @param lines Character vector containing the content of a CMakeLists.txt.
+#' Each entry should contain a newline.
+#'
+#' @return Data frame where each row corresponds to a CMake project dependency in \code{lines}.
+#' This contains the following columns:
+#' \itemize{
+#' \item \code{name}, the name of the project as defined in \code{lines}.
+#' \item \code{git.repository}, the URL of the Git repository hosting the project.
+#' This may be \code{NA} if \code{url} is supplied.
+#' \item \code{git.tag}, the branch, tag or commit SHA of the Git repository.
+#' This is always present if \code{git.repository} is non-\code{NA}, otherwise it will be \code{NA}.
+#' \item \code{url}, the URL of the tarball or zip file containing the project files.
+#' This may be \code{NA} if \code{git.repository} is supplied.
+#' \item \code{url.hash}, a hash of the file in \code{url}.
+#' This may be \code{NA}, even if \code{url} is supplied.
+#' }
+#'
+#' @author Aaron Lun
+#' @examples
+#' cmake.file <- "
+#' FetchContent_Declare(foo GIT_REPOSITORY https://github.com/LTLA/foo GIT_TAG master)
+#'
+#' FetchContent_Declare(blah 
+#'      GIT_REPOSITORY https://github.com/LTLA/blah 
+#'      GIT_TAG 87as68a768c6ac768a76
+#' )
+#'
+#' FetchContent_Declare(whee URL https://blah.com/thing.1.1.tar.gz)
+#'
+#' FetchContent_Declare(stuff URL https://stuff.net/downloads/stuff.0.9.1.zip
+#'    URL_HASH MD5=asdas8d7a8d7a9s8d7)
+#' "
+#'
+#' scanFetchContentDeclare(lines=strsplit(cmake.file, "\n")[[1]])
+#'
 #' @export
-scanFetchContentDeclare <- function(path) {
-    lines <- readLines(path)
-
+scanFetchContentDeclare <- function(path, lines = readLines(path)) {
     collected.names <- character(0)
     collected.git.repo <- character(0)
     collected.git.tag <- character(0)

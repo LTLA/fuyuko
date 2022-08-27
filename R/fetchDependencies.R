@@ -1,3 +1,38 @@
+#' Download dependencies to disk
+#'
+#' Fetch CMake project dependencies by cloning Git repositories or downloading their contents.
+#' These are unpacked into a cache directory for re-use across multiple requests.
+#'
+#' @param dependencies Data frame containing a manifest of dependencies,
+#' typically the return value from \code{\link{scanFetchContentDeclare}}.
+#' Each row represents a CMake project.
+#' @param cache String containing a path to a cache directory.
+#'
+#' @return Character vector of length equal to the number of rows in \code{dependencies}.
+#' Each entry contains the path to the directory (stored inside \code{cache}) for the corresponding project.
+#' 
+#' @author Aaron Lun
+#' @examples
+#' dir <- file.path(tempdir(), "fuyuko-cache")
+#' df <- rbind(
+#'     data.frame(
+#'         name = "kmeans", 
+#'         git.repository = "https://github.com/LTLA/CppKmeans",
+#'         git.tag = "698cd1279530675e8ea10bf58d3a1d1508fa1fb8",
+#'         url = NA_character_,
+#'         url.hash = NA_character_
+#'     ),
+#'     data.frame(
+#'         name = "igraph",
+#'         git.repository = NA_character_,
+#'         git.tag = NA_character_,
+#'         url = "https://github.com/igraph/igraph/releases/download/0.9.4/igraph-0.9.4.tar.gz",
+#'         url.hash = "MD5=ea8d7791579cfbc590060570e0597f6b"
+#'     )
+#' )
+#' 
+#' fetchDependencies(df, cache = dir)
+#' 
 #' @export
 #' @importFrom utils URLencode
 #' @importFrom git2r clone checkout
