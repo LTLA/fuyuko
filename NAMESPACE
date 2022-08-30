@@ -3,6 +3,7 @@
 export(cacheDirectory)
 export(fetchDependencies)
 export(findCMakeLists)
+export(graphDependencies)
 export(queryAllDependencies)
 export(scanFetchContentDeclare)
 export(summarizeConflicts)

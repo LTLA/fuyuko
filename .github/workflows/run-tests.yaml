@@ -19,7 +19,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ${{ env.R_PKG_DIR }}
-        key: package-deps
+        key: package-deps-2
 
     - name: Restore the fuyuko cache
       uses: actions/cache@v3
@@ -28,14 +28,15 @@ jobs:
         key: dependency-cache
 
     - name: Install system dependencies
-      run: sudo apt-get update && sudo apt-get install -y libgit2-dev
+      run: sudo apt-get update && sudo apt-get install -y libgit2-dev libxml2-dev libglpk-dev
 
     - name: Install dependencies
       shell: Rscript {0}
-      run: install.packages(c("git2r", "testthat"))
+      run: install.packages(c("git2r", "testthat", "igraph"))
 
     - name: Run the tests
       run: |
+        export FUYUKO_CACHE_DIR=${{ env.FUYUKO_CACHE_DIR }}
         R CMD build . 
         tarball=$(ls | grep "tar.gz")
         R CMD check --no-manual Rscript ${tarball}

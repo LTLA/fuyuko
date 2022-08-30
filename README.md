@@ -101,13 +101,34 @@ deps$relationships[deps$relationships$index %in% c(10, 11),]
 So, one is required by the top-level project (i.e., **libscran** itself) while the other is required by `knncolle` (see row 12 in `deps$dependencies`).
 In both cases, the `FetchContent` call lives inside the `extern/CMakeLists.txt`, which is where I put all my non-test dependencies.
 
-Advanced users can summarize these relationships in a pretty graph:
+Advanced users can summarize these relationships in an **igraph** graph via `graphDependencies`.
+This will also create a pretty color-coded plot that highlights the dependency conflicts.
 
 ```r
-library(igraph)
-g <- make_graph(rbind(
-    c("source", deps$dependencies$name)[deps$relationships$parent + 1],
-    deps$dependencies$name[deps$relationships$index]
-))
-plot(g)
+(g <- graphDependencies(deps))
+## IGRAPH 54e3d62 DN-- 16 28 --
+## + attr: name (v/c)
+## + edges from 54e3d62 (vertex names):
+##  [1] powerit       ->aarand-1   irlba         ->aarand-2
+##  [3] kmeans-10     ->aarand-2   kmeans-11     ->aarand-2
+##  [5] knncolle      ->Annoy      tatami        ->byteme
+##  [7] irlba         ->eigen      aarand-1      ->googletest
+##  [9] aarand-2      ->googletest byteme        ->googletest
+## [11] irlba         ->googletest kmeans-10     ->googletest
+## [13] kmeans-11     ->googletest knncolle      ->googletest
+## [15] powerit       ->googletest SOURCE        ->googletest
+## + ... omitted several edges
+```
+
+We can then traverse this graph in topological order to determine which projects need to update their pinned versions.
+For example, if we want to remove the conflicting `aarand-2` and `kmeans-11` from the dependency graph 
+(presumably by switching all their `FetchContent` references to `aarand-1` and `kmeans-10`, respectively), 
+we could obtain an update order by examining the subgraph of affected projects:
+
+```r
+affected <- igraph::subcomponent(g, c("aarand-2", "kmeans-11"), mode="in")
+subg <- igraph::subgraph(g, affected)
+igraph::topo_sort(subg, mode="in")
+## + 6/6 vertices, named, from e9f3ab4:
+## [1] aarand-2  irlba     kmeans-10 kmeans-11 knncolle  SOURCE   
 ```

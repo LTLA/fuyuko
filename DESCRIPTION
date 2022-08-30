@@ -12,5 +12,6 @@ Imports:
     utils,
     git2r
 Suggests:
-    testthat
+    testthat,
+    igraph
 RoxygenNote: 7.2.1
